@@ -1,0 +1,467 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FF6B35;--purple:#7C3AED;--pink:#EC4899;--teal:#0D9488;
+  --green:#10B981;--dark:#1E1B4B;--light:#F8F7FF;
+}
+body{font-family:'Nunito',sans-serif;background:var(--light);color:var(--dark);min-height:100vh}
+
+nav{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1.2rem;background:#fff;box-shadow:0 2px 16px rgba(124,58,237,0.1);position:sticky;top:0;z-index:100}
+.nav-logo{font-weight:900;font-size:1.2rem;color:var(--purple)}
+.nav-logo span{color:var(--orange)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.back-btn{background:#EDE9FE;border:none;padding:0.4rem 0.9rem;border-radius:50px;font-size:0.82rem;font-weight:700;color:var(--purple);cursor:pointer;font-family:'Nunito',sans-serif;display:none}
+.cart-btn{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;padding:0.45rem 0.9rem;border-radius:50px;font-size:0.87rem;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform 0.15s}
+.cart-btn:hover{transform:scale(1.04)}
+.cart-count{background:#FFD700;color:var(--dark);border-radius:50px;padding:1px 7px;font-size:0.78rem;font-weight:900}
+
+/* PAGE SYSTEM */
+.page{display:none}
+.page.active{display:block}
+
+/* HOME */
+.hero{background:linear-gradient(135deg,#7C3AED 0%,#EC4899 55%,#FF6B35 100%);padding:2rem 1.2rem 2.5rem;text-align:center}
+.hero-logo{font-size:1.9rem;font-weight:900;color:#fff}
+.hero-logo span{color:#FFD700}
+.hero-sub{color:rgba(255,255,255,0.85);font-size:0.88rem;margin-top:4px}
+
+.cats{display:flex;gap:8px;padding:0.9rem 1.2rem;overflow-x:auto;scrollbar-width:none;background:#fff;border-bottom:1px solid #f0eeff}
+.cats::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:0.38rem 0.95rem;border-radius:50px;border:2px solid var(--purple);background:#fff;color:var(--purple);font-weight:700;font-size:0.82rem;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.15s}
+.cat-btn.active,.cat-btn:hover{background:var(--purple);color:#fff}
+
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px;padding:1rem 1.2rem 1.5rem}
+.product-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 14px rgba(124,58,237,0.09);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;position:relative}
+.product-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(124,58,237,0.18)}
+.p-badge{position:absolute;top:8px;left:8px;background:var(--orange);color:#fff;font-size:0.68rem;font-weight:800;padding:3px 8px;border-radius:50px;z-index:1}
+.p-img{width:100%;height:108px;display:flex;align-items:center;justify-content:center;font-size:3rem}
+.p-body{padding:0.65rem 0.75rem 0.75rem}
+.p-name{font-weight:700;font-size:0.87rem;color:var(--dark);line-height:1.3}
+.p-price{font-weight:900;font-size:1rem;color:var(--orange);margin:3px 0 6px}
+.p-rating{font-size:0.75rem;color:#888;margin-bottom:6px}
+.add-btn{width:100%;padding:0.42rem;border:none;border-radius:50px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:800;font-size:0.82rem;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.15s}
+.add-btn:hover{transform:scale(1.03)}
+.add-btn.added{background:linear-gradient(135deg,var(--green),var(--teal))}
+
+/* DETAIL PAGE */
+.detail-hero{padding:1.2rem}
+.detail-img{width:100%;height:200px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:1rem}
+.detail-body{background:#fff;border-radius:20px;padding:1.2rem;box-shadow:0 2px 16px rgba(124,58,237,0.08)}
+.detail-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.detail-name{font-size:1.25rem;font-weight:900;color:var(--dark);line-height:1.3;flex:1;padding-right:8px}
+.detail-badge{background:linear-gradient(135deg,var(--orange),var(--pink));color:#fff;font-size:0.72rem;font-weight:800;padding:4px 10px;border-radius:50px;flex-shrink:0}
+.detail-price-row{display:flex;align-items:baseline;gap:10px;margin:10px 0}
+.detail-price{font-size:1.7rem;font-weight:900;color:var(--orange)}
+.detail-old{font-size:1rem;color:#aaa;text-decoration:line-through}
+.detail-rating{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.stars{color:#F59E0B;font-size:0.95rem;letter-spacing:1px}
+.rating-count{font-size:0.82rem;color:#888}
+.detail-desc{font-size:0.9rem;color:#555;line-height:1.65;margin-bottom:1rem}
+.detail-features{margin-bottom:1rem}
+.feat-title{font-weight:800;font-size:0.9rem;color:var(--dark);margin-bottom:8px}
+.feat-list{display:flex;flex-direction:column;gap:6px}
+.feat-item{display:flex;align-items:center;gap:8px;font-size:0.85rem;color:#444}
+.feat-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0}
+
+.color-section{margin-bottom:1rem}
+.color-title{font-weight:800;font-size:0.9rem;color:var(--dark);margin-bottom:8px}
+.color-opts{display:flex;gap:8px}
+.color-opt{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s}
+.color-opt.sel{border-color:var(--purple);transform:scale(1.15)}
+
+.qty-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.qty-label{font-weight:800;font-size:0.9rem;color:var(--dark)}
+.qty-ctrl{display:flex;align-items:center;gap:10px}
+.qbtn{background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;font-weight:900;display:flex;align-items:center;justify-content:center;font-family:'Nunito',sans-serif}
+.qty-num{font-size:1.1rem;font-weight:900;min-width:24px;text-align:center;color:var(--dark)}
+
+.detail-actions{display:flex;gap:10px;margin-bottom:0.8rem}
+.fav-btn{background:#FEF3C7;border:none;padding:0.75rem;border-radius:14px;font-size:1.2rem;cursor:pointer;transition:transform 0.15s}
+.fav-btn:hover{transform:scale(1.1)}
+.fav-btn.faved{background:#FDE68A}
+.detail-add-btn{flex:1;padding:0.75rem;border:none;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:900;font-size:1rem;cursor:pointer;font-family:'Nunito',sans-serif;transition:transform 0.15s}
+.detail-add-btn:hover{transform:scale(1.02)}
+.detail-add-btn.added{background:linear-gradient(135deg,var(--green),var(--teal))}
+
+.related-section{padding:0.5rem 1.2rem 1.5rem}
+.section-title{font-weight:900;font-size:1rem;color:var(--dark);margin-bottom:0.8rem;display:flex;align-items:center;gap:6px}
+.related-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none}
+.related-scroll::-webkit-scrollbar{display:none}
+.rel-card{flex-shrink:0;width:130px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(124,58,237,0.08);cursor:pointer;transition:transform 0.2s}
+.rel-card:hover{transform:translateY(-3px)}
+.rel-img{height:75px;display:flex;align-items:center;justify-content:center;font-size:2rem}
+.rel-body{padding:0.5rem 0.6rem}
+.rel-name{font-size:0.78rem;font-weight:700;color:var(--dark);line-height:1.3;margin-bottom:2px}
+.rel-price{font-size:0.82rem;font-weight:900;color:var(--orange)}
+
+/* CART PANEL */
+.overlay{background:rgba(0,0,0,0.4);position:fixed;inset:0;z-index:150;display:none}
+.overlay.on{display:block}
+.cart-panel{position:fixed;bottom:0;left:0;right:0;background:#fff;border-radius:24px 24px 0 0;box-shadow:0 -8px 40px rgba(0,0,0,0.18);transform:translateY(100%);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);z-index:200;max-height:88vh;overflow-y:auto}
+.cart-panel.open{transform:translateY(0)}
+.cart-header{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.2rem 0.8rem;border-bottom:2px solid #f3f4f6;position:sticky;top:0;background:#fff}
+.cart-title{font-weight:900;font-size:1.15rem;color:var(--dark)}
+.close-btn{background:#f3f4f6;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+.cart-items{padding:0.8rem 1.2rem}
+.cart-item{display:flex;align-items:center;gap:12px;padding:0.65rem 0;border-bottom:1px solid #f9fafb}
+.ci-emoji{font-size:1.8rem;width:42px;height:42px;background:#f9fafb;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-info{flex:1}
+.ci-name{font-weight:700;font-size:0.88rem}
+.ci-price{font-size:0.83rem;color:var(--orange);font-weight:700}
+.ci-qty{display:flex;align-items:center;gap:7px}
+.qty-btn2{background:var(--purple);color:#fff;border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;font-size:0.95rem;font-weight:900;display:flex;align-items:center;justify-content:center}
+.qty-val{font-weight:800;min-width:18px;text-align:center;font-size:0.9rem}
+.addr-section{padding:0 1.2rem 0.8rem}
+.addr-title{font-weight:800;margin-bottom:0.6rem;color:var(--dark);font-size:0.92rem}
+.field{width:100%;padding:0.58rem 0.85rem;border:2px solid #e5e7eb;border-radius:12px;font-size:0.88rem;font-family:'Nunito',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:7px;color:var(--dark);background:#fff}
+.field:focus{border-color:var(--purple)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.cart-footer{padding:0.9rem 1.2rem 1.3rem;position:sticky;bottom:0;background:#fff;border-top:2px solid #f3f4f6}
+.total-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.9rem}
+.total-label{font-size:0.95rem;font-weight:700;color:#666}
+.total-price{font-size:1.35rem;font-weight:900;color:var(--dark)}
+.confirm-btn{width:100%;padding:0.85rem;border:none;border-radius:50px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;font-weight:900;font-size:0.97rem;cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.15s}
+.confirm-btn:hover{transform:scale(1.02)}
+.empty-cart{text-align:center;padding:2rem;color:#9ca3af}
+
+.toast{position:fixed;top:75px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--green);color:#fff;padding:0.55rem 1.1rem;border-radius:50px;font-weight:700;font-size:0.87rem;opacity:0;transition:all 0.3s;z-index:300;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.bg1{background:#EDE9FE}
+.bg2{background:#FEF3C7}
+.bg3{background:#DCFCE7}
+.bg4{background:#FCE7F3}
+.bg5{background:#DBEAFE}
+.bg6{background:#FFEDD5}
+</style>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="toast" id="toast"></div>
+
+<nav>
+  <div class="nav-logo">Elite<span>Craft</span></div>
+  <div class="nav-right">
+    <button class="back-btn" id="back-btn" onclick="showHome()">← Geri</button>
+    <button class="cart-btn" onclick="openCart()">🛒 <span class="cart-count" id="cart-count">0</span></button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-logo">Elite<span>Craft</span> ✨</div>
+    <div class="hero-sub">En kaliteli ürünler, en iyi fiyatlar</div>
+  </div>
+  <div class="cats">
+    <button class="cat-btn active" onclick="filterCat(this,'all')">Tümü</button>
+    <button class="cat-btn" onclick="filterCat(this,'cuzdan_kartlik')">👛 Cüzdan</button>
+    <button class="cat-btn" onclick="filterCat(this,'cuzdan_kartlik')">💳 Kartlık</button>
+    <button class="cat-btn" onclick="filterCat(this,'kemer')">👖 Kemer</button>
+    <button class="cat-btn" onclick="filterCat(this,'airpods')">🎧 Air Pods kılıfı</button>
+    <button class="cat-btn" onclick="filterCat(this,'zippo')">🔥 Zippo</button>
+  </div>
+  <div class="products" id="products"></div>
+</div>
+
+<!-- DETAIL PAGE -->
+<div class="page" id="page-detail">
+  <div class="detail-hero">
+    <div class="detail-img" id="d-img"></div>
+    <div class="detail-body">
+      <div class="detail-top">
+        <div class="detail-name" id="d-name"></div>
+        <div class="detail-badge" id="d-badge"></div>
+      </div>
+      <div class="detail-rating">
+        <span class="stars" id="d-stars"></span>
+        <span class="rating-count" id="d-rcount"></span>
+      </div>
+      <div class="detail-price-row">
+        <span class="detail-price" id="d-price"></span>
+        <span class="detail-old" id="d-old"></span>
+      </div>
+      <div class="detail-desc" id="d-desc"></div>
+      <div class="detail-features">
+        <div class="feat-title">✨ Özellikler</div>
+        <div class="feat-list" id="d-feats"></div>
+      </div>
+      <div class="color-section" id="d-color-sec">
+        <div class="color-title">🎨 Renk Seçin</div>
+        <div class="color-opts" id="d-colors"></div>
+      </div>
+      <div class="qty-row">
+        <span class="qty-label">Adet</span>
+        <div class="qty-ctrl">
+          <button class="qbtn" onclick="changeDetQty(-1)">−</button>
+          <span class="qty-num" id="d-qty">1</span>
+          <button class="qbtn" onclick="changeDetQty(1)">+</button>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="fav-btn" id="d-fav" onclick="toggleFav()">🤍</button>
+        <button class="detail-add-btn" id="d-add-btn" onclick="addDetailToCart()">🛒 Sepete Ekle</button>
+      </div>
+    </div>
+  </div>
+  <div class="related-section">
+    <div class="section-title">🔥 Benzer Ürünler</div>
+    <div class="related-scroll" id="related"></div>
+  </div>
+</div>
+
+<!-- CART PANEL -->
+<div class="cart-panel" id="cart-panel">
+  <div class="cart-header">
+    <div class="cart-title">🛒 Sepetim</div>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="addr-section">
+    <div class="addr-title">📦 Teslimat Bilgileri</div>
+    <input class="field" id="fname" placeholder="Ad Soyad" />
+    <input class="field" id="fphone" placeholder="Telefon Numaranız" type="tel" />
+    <input class="field" id="faddress" placeholder="Açık Adresiniz" />
+    <div class="field-row">
+      <input class="field" id="fcity" placeholder="İlçe" />
+      <input class="field" id="fdistrict" placeholder="İl" />
+    </div>
+    <input class="field" id="fnote" placeholder="Sipariş notu (isteğe bağlı)" />
+  </div>
+  <div class="cart-footer">
+    <div class="total-row">
+      <span class="total-label">Toplam Tutar</span>
+      <span class="total-price" id="total-price">₺0</span>
+    </div>
+    <button class="confirm-btn" onclick="confirmOrder()">💬 WhatsApp ile Siparişi Onayla</button>
+  </div>
+</div>
+
+<script>
+const products = [
+  // --- CÜZDAN & KARTLIK ---
+  {id:1,name:'Hakiki Deri Cüzdan',price:499,oldPrice:699,emoji:'👛',cat:'cuzdan_kartlik',badge:'Çok Satan',bg:'bg1',rating:4.8,reviews:321,desc:'%100 hakiki deriden üretilmiş, şık ve dayanıklı cüzdan. Kartlarınız ve nakit için özel bölmeler.',feats:['Hakiki deri','6 kart bölmesi','Nakit bölmesi','Şık tasarım'],colors:['#3E2723','#5D4037','#8D6E63']},
+  {id:2,name:'Hakiki Deri Kartlık',price:299,oldPrice:null,emoji:'💳',cat:'cuzdan_kartlik',badge:'Yeni',bg:'bg2',rating:4.7,reviews:142,desc:'Minimal tasarımıyla cebinizde yer kaplamayan, kaliteli kartlık.',feats:['Hakiki deri','4 kart bölmesi','Slim tasarım','Unisex'],colors:['#3E2723','#5D4037','#BCAAA4']},
+  {id:3,name:'Lüks Erkek Cüzdan',price:599,oldPrice:799,emoji:'👛',cat:'cuzdan_kartlik',badge:'İndirim',bg:'bg3',rating:4.9,reviews:212,desc:'Klasik tasarım, yumuşak hakiki deri ve çok bölmeli iç yapısı ile uzun ömürlü.',feats:['Hakiki deri','Çok bölmeli','Slim tasarım','Klasik görünüm'],colors:['#000','#3E2723','#5D4037']},
+  {id:4,name:'Kadın Deri Kartlık',price:349,oldPrice:null,emoji:'💳',cat:'cuzdan_kartlik',badge:null,bg:'bg4',rating:4.6,reviews:98,desc:'Şık renk seçenekleriyle kadınlar için tasarlanmış minimal kartlık.',feats:['Hakiki deri','3 kart bölmesi','Renk seçenekleri','Unisex'],colors:['#8D6E63','#BCAAA4','#FFF']},
+
+  // --- KEMER ---
+  {id:5,name:'Hakiki Deri Kemer',price:349,oldPrice:499,emoji:'👖',cat:'kemer',badge:'İndirim',bg:'bg3',rating:4.6,reviews:178,desc:'Klasik toka ve dayanıklı hakiki deri malzemesiyle uzun ömürlü kullanım.',feats:['Hakiki deri','Metal toka','Ayarlanabilir','Klasik tasarım'],colors:['#3E2723','#5D4037','#000000']},
+  {id:6,name:'Lüks Erkek Kemer',price:449,oldPrice:599,emoji:'👖',cat:'kemer',badge:'Çok Satan',bg:'bg1',rating:4.8,reviews:201,desc:'Özel tokası ve kaliteli hakiki deri ile hem şık hem dayanıklı.',feats:['Hakiki deri','Metal toka','Ayarlanabilir','Unisex'],colors:['#000','#5D4037','#8D6E63']},
+  {id:7,name:'Kadın Deri Kemer',price:399,oldPrice:null,emoji:'👖',cat:'kemer',badge:'Yeni',bg:'bg2',rating:4.7,reviews:134,desc:'Şık tasarımıyla hem günlük hem özel kullanıma uygun.',feats:['Hakiki deri','Metal toka','Ayarlanabilir','Renk seçenekleri'],colors:['#8D6E63','#BCAAA4','#FFF']},
+
+  // --- AIRPODS / KULAKLIK ---
+  {id:8,name:'AirPods Pro 2. Nesil',price:2899,oldPrice:3499,emoji:'🎧',cat:'airpods',badge:'Çok Satan',bg:'bg4',rating:4.9,reviews:412,desc:'Aktif gürültü engelleme, uzun pil ömrü ve kristal net ses kalitesi.',feats:['Aktif gürültü engelleme','30 saat pil ömrü','Kablosuz şarj','Bluetooth 5.3'],colors:['#fff','#C0C0C0','#000']},
+  {id:9,name:'Kablosuz Kulaklık Mini',price:899,oldPrice:1199,emoji:'🎧',cat:'airpods',badge:'Trend',bg:'bg5',rating:4.7,reviews:234,desc:'Küçük boyut, hafif tasarım ve yüksek ses kalitesi ile ideal.',feats:['Kablosuz','20 saat pil','Bluetooth 5.3','Taşıma kutusu'],colors:['#fff','#C0C0C0','#7C3AED']},
+  {id:10,name:'Over-Ear Bluetooth Kulaklık',price:1299,oldPrice:1599,emoji:'🎧',cat:'airpods',badge:'Yeni',bg:'bg6',rating:4.6,reviews:178,desc:'Derin bas ve surround ses deneyimi sunar.',feats:['Kablosuz','30 saat pil','Aktif gürültü engelleme','Katlanabilir'],colors:['#1E1B4B','#888','#C0A060']},
+
+  // --- ZIPPO ÇAKMAK ---
+  {id:11,name:'Zippo Çakmak Klasik',price:399,oldPrice:null,emoji:'🔥',cat:'zippo',badge:'Trend',bg:'bg5',rating:4.8,reviews:198,desc:'Orijinal Zippo çakmak, dayanıklı ve ömür boyu garanti ile gelir.',feats:['Orijinal Zippo','Metal gövde','Rüzgar geçirmez','Ömür boyu garanti'],colors:['#000','#C0C0C0','#FFD700']},
+  {id:12,name:'Zippo Çakmak Lüks',price:599,oldPrice:799,emoji:'🔥',cat:'zippo',badge:'Çok Satan',bg:'bg1',rating:4.9,reviews:142,desc:'Özel tasarım ve parlak kaplama ile koleksiyonluk ürün.',feats:['Özel tasarım','Metal gövde','Rüzgar geçirmez','Parlak kaplama'],colors:['#000','#FFD700','#C0C0C0']},
+
+  // --- HAKİKİ DERİ KILIF ---
+  {id:13,name:'Hakiki Deri Telefon Kılıfı',price:299,oldPrice:399,emoji:'📱',cat:'kilif',badge:'Yeni',bg:'bg6',rating:4.7,reviews:156,desc:'Telefonunuzu koruyan şık ve dayanıklı hakiki deri kılıf.',feats:['Hakiki deri','Darbeye dayanıklı','Kart bölmeli','Magnet kapak'],colors:['#3E2723','#5D4037','#000000']},
+  {id:14,name:'Hakiki Deri Tablet Kılıfı',price:499,oldPrice:649,emoji:'📱',cat:'kilif',badge:'Çok Satan',bg:'bg2',rating:4.8,reviews:112,desc:'Tabletlerinizi güvenle korur, şık hakiki deri tasarım.',feats:['Hakiki deri','Darbeye dayanıklı','Stand özelliği','Kart bölmeli'],colors:['#3E2723','#5D4037','#8D6E63']},
+  {id:15,name:'Hakiki Deri AirPods Kılıfı',price:199,oldPrice:null,emoji:'🎧',cat:'kilif',badge:'İndirim',bg:'bg3',rating:4.7,reviews:98,desc:'AirPods’unuzu çizilmelere karşı korur, şık hakiki deri kaplama.',feats:['Hakiki deri','Darbeye dayanıklı','Magnet kapak','Taşıma kolaylığı'],colors:['#3E2723','#C0C0C0','#FFF']},
+];
+let cart={};
+let currentCat='all';
+let currentProduct=null;
+let detQty=1;
+let favs=new Set();
+let selColor=0;
+
+function filterCat(btn,cat){
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat=cat;
+  renderProducts();
+}
+
+function renderProducts(){
+  const filtered=currentCat==='all'?products:products.filter(p=>p.cat===currentCat);
+  document.getElementById('products').innerHTML=filtered.map(p=>{
+    const inCart=cart[p.id]&&cart[p.id].qty>0;
+    const stars='⭐'.repeat(Math.round(p.rating));
+    return`<div class="product-card" onclick="showDetail(${p.id})">
+      ${p.badge?`<div class="p-badge">${p.badge}</div>`:''}
+      <div class="p-img ${p.bg}">${p.emoji}</div>
+      <div class="p-body">
+        <div class="p-name">${p.name}</div>
+        <div class="p-rating">${stars} ${p.rating} (${p.reviews})</div>
+        <div class="p-price">₺${p.price.toLocaleString('tr-TR')}</div>
+        <button class="add-btn ${inCart?'added':''}" onclick="event.stopPropagation();quickAdd(${p.id})">
+          ${inCart?'✓ Sepette':'+ Sepete Ekle'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showDetail(id){
+  currentProduct=products.find(p=>p.id===id);
+  const p=currentProduct;
+  detQty=1;
+  selColor=0;
+  document.getElementById('d-img').className=`detail-img ${p.bg}`;
+  document.getElementById('d-img').textContent=p.emoji;
+  document.getElementById('d-name').textContent=p.name;
+  document.getElementById('d-badge').textContent=p.badge||'';
+  document.getElementById('d-badge').style.display=p.badge?'block':'none';
+  const starsArr=['★','★','★','★','★'].map((s,i)=>i<Math.floor(p.rating)?'⭐':'☆').join('');
+  document.getElementById('d-stars').textContent='⭐'.repeat(Math.round(p.rating));
+  document.getElementById('d-rcount').textContent=`${p.rating} · ${p.reviews} değerlendirme`;
+  document.getElementById('d-price').textContent='₺'+p.price.toLocaleString('tr-TR');
+  const oldEl=document.getElementById('d-old');
+  if(p.oldPrice){oldEl.textContent='₺'+p.oldPrice.toLocaleString('tr-TR');oldEl.style.display='inline';}
+  else{oldEl.style.display='none';}
+  document.getElementById('d-desc').textContent=p.desc;
+  document.getElementById('d-feats').innerHTML=p.feats.map(f=>`<div class="feat-item"><div class="feat-dot"></div>${f}</div>`).join('');
+  document.getElementById('d-qty').textContent=1;
+  const inCart=cart[p.id]&&cart[p.id].qty>0;
+  const addBtn=document.getElementById('d-add-btn');
+  addBtn.textContent=inCart?'✓ Sepette':'🛒 Sepete Ekle';
+  addBtn.className='detail-add-btn'+(inCart?' added':'');
+  document.getElementById('d-fav').textContent=favs.has(p.id)?'❤️':'🤍';
+  const colorSec=document.getElementById('d-color-sec');
+  if(p.colors&&p.colors.length){
+    colorSec.style.display='block';
+    document.getElementById('d-colors').innerHTML=p.colors.map((c,i)=>`<div class="color-opt${i===0?' sel':''}" style="background:${c};border-color:${i===0?'var(--purple)':'#ddd'}" onclick="selectColor(this,${i})"></div>`).join('');
+  } else {colorSec.style.display='none';}
+  renderRelated(p);
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-detail').classList.add('active');
+  document.getElementById('back-btn').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function renderRelated(p){
+  const related=products.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,6);
+  document.getElementById('related').innerHTML=related.map(r=>`
+    <div class="rel-card" onclick="showDetail(${r.id})">
+      <div class="rel-img ${r.bg}">${r.emoji}</div>
+      <div class="rel-body">
+        <div class="rel-name">${r.name}</div>
+        <div class="rel-price">₺${r.price.toLocaleString('tr-TR')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function showHome(){
+  document.getElementById('page-detail').classList.remove('active');
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('back-btn').style.display='none';
+  renderProducts();
+}
+
+function selectColor(el,idx){
+  selColor=idx;
+  document.querySelectorAll('.color-opt').forEach((o,i)=>{
+    o.classList.toggle('sel',i===idx);
+    o.style.borderColor=i===idx?'var(--purple)':'#ddd';
+  });
+}
+
+function changeDetQty(d){
+  detQty=Math.max(1,detQty+d);
+  document.getElementById('d-qty').textContent=detQty;
+}
+
+function addDetailToCart(){
+  const p=currentProduct;
+  if(!cart[p.id]) cart[p.id]={...p,qty:0};
+  cart[p.id].qty+=detQty;
+  updateCartCount();
+  const btn=document.getElementById('d-add-btn');
+  btn.textContent='✓ Sepette';
+  btn.className='detail-add-btn added';
+  showToast(`${p.emoji} ${detQty} adet sepete eklendi!`);
+}
+
+function quickAdd(id){
+  const p=products.find(x=>x.id===id);
+  if(!cart[id]) cart[id]={...p,qty:0};
+  cart[id].qty++;
+  updateCartCount();
+  renderProducts();
+  showToast(`${p.emoji} ${p.name} sepete eklendi!`);
+}
+
+function toggleFav(){
+  const id=currentProduct.id;
+  if(favs.has(id)){favs.delete(id);document.getElementById('d-fav').textContent='🤍';}
+  else{favs.add(id);document.getElementById('d-fav').textContent='❤️';showToast('❤️ Favorilere eklendi!');}
+}
+
+function updateCartCount(){
+  document.getElementById('cart-count').textContent=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+}
+
+function openCart(){
+  renderCartItems();
+  document.getElementById('cart-panel').classList.add('open');
+  document.getElementById('overlay').classList.add('on');
+}
+
+function closeCart(){
+  document.getElementById('cart-panel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('on');
+}
+
+function renderCartItems(){
+  const items=Object.values(cart);
+  const container=document.getElementById('cart-items');
+  if(!items.length){container.innerHTML='<div class="empty-cart"><div style="font-size:2.5rem">🛒</div>Sepetiniz boş</div>';document.getElementById('total-price').textContent='₺0';return;}
+  container.innerHTML=items.map(i=>`<div class="cart-item">
+    <div class="ci-emoji">${i.emoji}</div>
+    <div class="ci-info"><div class="ci-name">${i.name}</div><div class="ci-price">₺${(i.price*i.qty).toLocaleString('tr-TR')}</div></div>
+    <div class="ci-qty">
+      <button class="qty-btn2" onclick="cartQty(${i.id},-1)">−</button>
+      <span class="qty-val">${i.qty}</span>
+      <button class="qty-btn2" onclick="cartQty(${i.id},1)">+</button>
+    </div>
+  </div>`).join('');
+  document.getElementById('total-price').textContent='₺'+items.reduce((s,i)=>s+i.price*i.qty,0).toLocaleString('tr-TR');
+}
+
+function cartQty(id,d){
+  if(!cart[id])return;
+  cart[id].qty+=d;
+  if(cart[id].qty<=0)delete cart[id];
+  updateCartCount();
+  renderCartItems();
+  if(currentProduct&&currentProduct.id===id){
+    const inCart=cart[id]&&cart[id].qty>0;
+    const btn=document.getElementById('d-add-btn');
+    if(btn){btn.textContent=inCart?'✓ Sepette':'🛒 Sepete Ekle';btn.className='detail-add-btn'+(inCart?' added':'');}
+  }
+}
+
+function confirmOrder(){
+  const name=document.getElementById('fname').value.trim();
+  const phone=document.getElementById('fphone').value.trim();
+  const address=document.getElementById('faddress').value.trim();
+  const city=document.getElementById('fcity').value.trim();
+  const district=document.getElementById('fdistrict').value.trim();
+  const note=document.getElementById('fnote').value.trim();
+  if(!name||!phone||!address||!city||!district){showToast('⚠️ Lütfen tüm alanları doldurun!');return;}
+  const items=Object.values(cart);
+  if(!items.length){showToast('🛒 Sepetiniz boş!');return;}
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  let msg='🛍️ *YENİ SİPARİŞ - RenkliShop*\n━━━━━━━━━━━━━━━\n*📦 SİPARİŞ LİSTESİ*\n';
+  items.forEach(i=>{msg+=`${i.emoji} ${i.name} x${i.qty} = ₺${(i.price*i.qty).toLocaleString('tr-TR')}\n`;});
+  msg+=`━━━━━━━━━━━━━━━\n💰 *TOPLAM: ₺${total.toLocaleString('tr-TR')}*\n━━━━━━━━━━━━━━━\n*📍 TESLİMAT*\n👤 ${name}\n📞 ${phone}\n🏠 ${address}\n📍 ${city} / ${district}`;
+  if(note) msg+=`\n📝 ${note}`;
+  window.open(`https://wa.me/905xxxxxxxxx?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+renderProducts();
+</script>
