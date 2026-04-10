@@ -450,7 +450,7 @@ function confirmOrder(){
   const items=Object.values(cart);
   if(!items.length){showToast('🛒 Sepetiniz boş!');return;}
   const total=items.reduce((s,i)=>s+i.price*i.qty,0);
-  let msg='🛍️ *YENİ SİPARİŞ - RenkliShop*\n━━━━━━━━━━━━━━━\n*📦 SİPARİŞ LİSTESİ*\n';
+  let msg='🛍️ *YENİ SİPARİŞ - EliteCraft*\n━━━━━━━━━━━━━━━\n*📦 SİPARİŞ LİSTESİ*\n';
   items.forEach(i=>{msg+=`${i.emoji} ${i.name} x${i.qty} = ₺${(i.price*i.qty).toLocaleString('tr-TR')}\n`;});
   msg+=`━━━━━━━━━━━━━━━\n💰 *TOPLAM: ₺${total.toLocaleString('tr-TR')}*\n━━━━━━━━━━━━━━━\n*📍 TESLİMAT*\n👤 ${name}\n📞 ${phone}\n🏠 ${address}\n📍 ${city} / ${district}`;
   if(note) msg+=`\n📝 ${note}`;
